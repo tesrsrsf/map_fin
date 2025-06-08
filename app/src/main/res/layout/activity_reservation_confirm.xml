@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ReservationConfirmActivity">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Reservation"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tve"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:text="Date: "
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/tvp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="People: "
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/tve"
+        app:layout_constraintTop_toBottomOf="@+id/tve" />
+
+    <TextView
+        android:id="@+id/openinghrs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="09:00~18:00"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/tvo"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="@+id/tvo"
+        app:layout_constraintTop_toBottomOf="@+id/tvo" />
+
+    <TextView
+        android:id="@+id/tvo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Opening Hours"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/people"
+        app:layout_constraintStart_toStartOf="@+id/tvp"
+        app:layout_constraintTop_toBottomOf="@+id/tvp" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Time (HH:MM e.g. 10:26)"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/tvo"
+        app:layout_constraintStart_toStartOf="@+id/tvo"
+        app:layout_constraintTop_toBottomOf="@+id/openinghrs" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="N"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvp"
+        app:layout_constraintEnd_toEndOf="@+id/tve"
+        app:layout_constraintStart_toEndOf="@+id/tvp"
+        app:layout_constraintTop_toTopOf="@+id/tvp" />
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:text="1145/01/04"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tve"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/tve"
+        app:layout_constraintTop_toTopOf="@+id/tve" />
+
+    <TextView
+        android:id="@+id/people"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="N"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvp"
+        app:layout_constraintEnd_toEndOf="@+id/date"
+        app:layout_constraintStart_toEndOf="@+id/tvp"
+        app:layout_constraintTop_toTopOf="@+id/tvp" />
+
+    <EditText
+        android:id="@+id/editTextTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="time"
+        app:layout_constraintEnd_toEndOf="@+id/textView10"
+        app:layout_constraintStart_toStartOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="100dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="16dp"
+        android:text="confirm"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTime"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/btn_cancel"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTime" />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="100dp"
+        android:layout_height="75dp"
+        android:text="cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTime"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintStart_toStartOf="@+id/editTextTime"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTime" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
