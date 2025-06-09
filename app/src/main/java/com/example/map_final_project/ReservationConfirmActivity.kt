@@ -28,7 +28,7 @@ class ReservationConfirmActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reservation_confirm)
 
-        // 绑定视图
+
         val dateText = findViewById<TextView>(R.id.date)
         val peopleText = findViewById<TextView>(R.id.people)
         val openingText = findViewById<TextView>(R.id.openinghrs)
@@ -36,26 +36,26 @@ class ReservationConfirmActivity : AppCompatActivity() {
         val confirmButton = findViewById<Button>(R.id.btn_confirm)
         val cancelButton = findViewById<Button>(R.id.btn_cancel)
 
-        // 获取传入数据
+
         userId = intent.getStringExtra("user_id") ?: ""
         date = intent.getStringExtra("date") ?: ""
         people = intent.getIntExtra("people", 1)
         val restaurantJson = intent.getStringExtra("restaurant")
         restaurant = Gson().fromJson(restaurantJson, Restaurant::class.java)
 
-        // 显示基础信息
+
         dateText.text = date
         peopleText.text = people.toString()
         openingTime = restaurant.openingHours.open
         closingTime = restaurant.openingHours.close
         openingText.text = "$openingTime ~ $closingTime"
 
-        // 取消按钮
+
         cancelButton.setOnClickListener {
-            finish() // 返回上一页
+            finish()
         }
 
-        // 确认按钮
+
         confirmButton.setOnClickListener {
             val inputTime = timeInput.text.toString().trim()
 
@@ -64,7 +64,7 @@ class ReservationConfirmActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // 创建新预约对象
+
             val newReservation = Reservation(
                 reservation_id = -1,
                 restaurant_id = restaurant.id,
@@ -73,10 +73,10 @@ class ReservationConfirmActivity : AppCompatActivity() {
                 time = inputTime
             )
 
-            // 写入到用户的预约信息中
+
             updateUserReservation(userId, newReservation)
 
-            // 返回 Activity 1
+
 
             Toast.makeText(this, "Reservation completed", Toast.LENGTH_SHORT).show()
 
@@ -90,7 +90,7 @@ class ReservationConfirmActivity : AppCompatActivity() {
         }
     }
 
-    // 验证时间格式是否合法且在营业时间范围内
+
     private fun isValidTime(time: String): Boolean {
         try {
             val fmt = SimpleDateFormat("HH:mm", Locale.getDefault())
@@ -103,7 +103,7 @@ class ReservationConfirmActivity : AppCompatActivity() {
         }
     }
 
-    // 修改用户预约信息（仅内存方式，可拓展为真实文件写入）
+
     private fun updateUserReservation(userId: String, newReservation: Reservation) {
         /*
         val jsonStr = assets.open("user_info.txt").bufferedReader().use { it.readText() }
@@ -121,7 +121,7 @@ class ReservationConfirmActivity : AppCompatActivity() {
 
         val file = File(filesDir, "user_info.txt")
 
-        // 第一次运行时从 assets 拷贝
+
         if (!file.exists()) {
             assets.open("user_info.txt").use { input ->
                 FileOutputStream(file).use { output ->
@@ -130,21 +130,21 @@ class ReservationConfirmActivity : AppCompatActivity() {
             }
         }
 
-        // 读取当前文件数据
+
         val jsonStr = file.bufferedReader().use { it.readText() }
         val userListType = object : TypeToken<MutableList<UserInfo>>() {}.type
         val users: MutableList<UserInfo> = Gson().fromJson(jsonStr, userListType)
 
-        // 找最大 reservation_id
+
         val maxId = users.flatMap { it.reserved }.maxOfOrNull { it.reservation_id } ?: 0
         val newId = maxId + 1
         val finalReservation = newReservation.copy(reservation_id = newId)
 
-        // 添加新预约到当前用户
+
         val user = users.find { it.id == userId }
         user?.reserved?.add(finalReservation)
 
-        // 写回文件
+
         val newJson = Gson().toJson(users)
         //Toast.makeText(this, "${user?.reserved?.get(2)?.toString()}", Toast.LENGTH_LONG).show()
         file.writeText(newJson)

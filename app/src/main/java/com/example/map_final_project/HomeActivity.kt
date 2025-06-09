@@ -27,22 +27,22 @@ class HomeActivity : AppCompatActivity() {
 
         userId = intent.getStringExtra("user_id") ?: ""
 
-        // 加载所有用户
+
         val userList = loadUserInfo()
         val allRestaurants = loadResInfo()
 
-        // 根据 ID 找到当前用户
+
         user = userList.find { it.id == userId } ?: run {
-            Toast.makeText(this, "Can\' find user info", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Cannot find user info", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
 
-        // 设置用户信息文本
+
         val userInfoText = findViewById<TextView>(R.id.text_user_info)
         userInfoText.text = "${user.id}: ${user.info.name} (${user.info.age}/${user.info.gender})"
 
-        // 设置预约列表
+
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_reservation_list)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -58,7 +58,7 @@ class HomeActivity : AppCompatActivity() {
         }
         recyclerView.adapter = reservationAdapter
 
-        // 设置“预约”按钮 → 跳转到 Activity 2
+
         val reserveBtn = findViewById<Button>(R.id.button_reserve)
         reserveBtn.setOnClickListener {
             //Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show()
@@ -66,14 +66,32 @@ class HomeActivity : AppCompatActivity() {
             intent.putExtra("user_id", user.id)
             startActivity(intent)
         }
+
+
+        val luckyBtn = findViewById<Button>(R.id.btn_lucky)
+        luckyBtn.setOnClickListener {
+            val recommended = getRecommendedRestaurant(user, allRestaurants, userList)
+            val intent = Intent(this, RestaurantDetailActivity::class.java)
+            intent.putExtra("restaurant", Gson().toJson(recommended))
+            intent.putExtra("user_id", user.id)
+            startActivity(intent)
+            Toast.makeText(this, "You think you are lucky?", Toast.LENGTH_SHORT).show()
+
+        }
+
+
     }
 
-    private fun loadResInfo(): List<Restaurant> {
-        val inputStream = assets.open("restaurant_info.txt")
-        val reader = InputStreamReader(inputStream)
-        val gson = Gson()
+    private fun loadResInfo(): MutableList<Restaurant> {
+        val file = File(filesDir, "restaurant_info.txt")
+        val jsonStr = if (file.exists()) {
+            file.bufferedReader().use { it.readText() }
+        } else {
+            assets.open("restaurant_info.txt").bufferedReader().use { it.readText() }
+        }
+
         val type = object : TypeToken<List<Restaurant>>() {}.type
-        return gson.fromJson(reader, type)
+        return Gson().fromJson(jsonStr, type)
     }
 
     private fun loadUserInfo(): MutableList<UserInfo> {
@@ -96,4 +114,41 @@ class HomeActivity : AppCompatActivity() {
         val type = object : TypeToken<List<UserInfo>>() {}.type
         return Gson().fromJson(jsonStr, type)
     }
+
+    private fun getRecommendedRestaurant(
+        user: UserInfo,
+        allRestaurants: List<Restaurant>,
+        allUsers: List<UserInfo>
+    ): Restaurant? {
+        val reservationCount = mutableMapOf<Int, Int>()
+        for (restaurant in allRestaurants) {
+            reservationCount[restaurant.id] = 0
+        }
+        for (u in allUsers) {
+            for (r in u.reserved) {
+                reservationCount[r.restaurant_id] = (reservationCount[r.restaurant_id] ?: 0) + 1
+            }
+        }
+
+        val minCount = reservationCount.values.minOrNull() ?: return null
+        val leastReserved = reservationCount.filter { it.value == minCount }.keys
+        val candidatesLeast = allRestaurants.filter { it.id in leastReserved }
+        val candidatesOther = allRestaurants.filter { it.id !in leastReserved }
+
+
+        val pickLeast = Math.random() < 0.5
+        return if (pickLeast && candidatesLeast.isNotEmpty()) {
+            candidatesLeast.random()
+        } else {
+            if (candidatesOther.isNotEmpty()) {
+                candidatesOther.random()
+            } else {
+                candidatesLeast.randomOrNull()
+            }
+        }
+    }
+
+
+
+
 }

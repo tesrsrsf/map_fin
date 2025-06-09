@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.io.File
 import java.io.InputStreamReader
 
 class RestaurantListActivity : AppCompatActivity() {
@@ -37,10 +38,15 @@ class RestaurantListActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
     }
 
-    private fun loadResInfo(): List<Restaurant> {
-        val inputStream = assets.open("restaurant_info.txt")
-        val reader = InputStreamReader(inputStream)
+    private fun loadResInfo(): MutableList<Restaurant> {
+        val file = File(filesDir, "restaurant_info.txt")
+        val jsonStr = if (file.exists()) {
+            file.bufferedReader().use { it.readText() }
+        } else {
+            assets.open("restaurant_info.txt").bufferedReader().use { it.readText() }
+        }
+
         val type = object : TypeToken<List<Restaurant>>() {}.type
-        return Gson().fromJson(reader, type)
+        return Gson().fromJson(jsonStr, type)
     }
 }

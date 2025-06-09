@@ -51,7 +51,7 @@ class ReservationAdapter(
         holder.time.text = "${reservation.date} ${reservation.time}"
         holder.people.text = "People: ${reservation.people}"
 
-        // 加载 drawable 图片资源
+
         val resId = holder.img.context.resources.getIdentifier(
             restaurant.image, "drawable", holder.img.context.packageName
         )

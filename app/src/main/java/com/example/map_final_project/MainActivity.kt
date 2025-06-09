@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.google.gson.reflect.TypeToken
+import java.io.File
 import java.io.InputStreamReader
 
 data class UserInfo(
@@ -63,7 +64,7 @@ data class Restaurant(
     val openingHours: OpeningHours,
 
     @SerializedName("Menu")
-    val menu: List<MenuItem>
+    val menu: MutableList<MenuItem>
 )
 
 
@@ -76,48 +77,91 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        // 处理系统边距
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.login_layout)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // 解析 JSON 数据
+
         userList = loadUserInfo()
         //Log.w(localClassName, "stage 1")
 
         val editId = findViewById<EditText>(R.id.edit_user_id)
         val editPwd = findViewById<EditText>(R.id.edit_password)
         val btnLogin = findViewById<Button>(R.id.btn_login)
+        val btnSign = findViewById<Button>(R.id.btn_signup)
         //Log.w(localClassName, "stage 2")
 
         btnLogin.setOnClickListener {
             val inputId = editId.text.toString()
             val inputPwd = editPwd.text.toString()
 
-            val matchedUser = userList.find { it.id == inputId && it.passwd == inputPwd }
-            //Log.w(localClassName, "stage 3")
-
-            if (matchedUser != null) {
-                // 成功登录，跳转到 HomeActivity
-                val intent = Intent(this, HomeActivity::class.java)
-                intent.putExtra("user_id", matchedUser.id)
-
-                //Log.w(localClassName, "stage 4")
+            if (inputId == "admin" && inputPwd == "114514") {
+                //Toast.makeText(this, "Not yet implemented", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, AdminActivity::class.java)
+                Toast.makeText(this, "Behold... The power of admin.", Toast.LENGTH_SHORT).show()
                 startActivity(intent)
-
-            } else {
+            } else if (inputId == "admin") {
                 Toast.makeText(this, "ID or Password incorrect.", Toast.LENGTH_SHORT).show()
             }
+
+            if (inputId != "admin") {
+                val matchedUser = userList.find { it.id == inputId && it.passwd == inputPwd }
+                //Log.w(localClassName, "stage 3")
+
+                if (matchedUser != null) {
+                    val intent = Intent(this, HomeActivity::class.java)
+                    intent.putExtra("user_id", matchedUser.id)
+
+                    //Log.w(localClassName, "stage 4")
+                    startActivity(intent)
+
+                } else {
+                    Toast.makeText(this, "ID or Password incorrect.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+
         }
+
+        btnSign.setOnClickListener {
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
+        }
+
+
     }
 
+    /*
     private fun loadUserInfo(): List<UserInfo> {
         val inputStream = assets.open("user_info.txt")
         val reader = InputStreamReader(inputStream)
         val gson = Gson()
         val type = object : TypeToken<List<UserInfo>>() {}.type
         return gson.fromJson(reader, type)
+    }
+     */
+
+    private fun loadUserInfo(): MutableList<UserInfo> {
+        /*
+        val inputStream = assets.open("user_info.txt")
+        val reader = InputStreamReader(inputStream)
+        val gson = Gson()
+        val type = object : TypeToken<List<UserInfo>>() {}.type
+        return gson.fromJson(reader, type)
+        */
+
+
+        val file = File(filesDir, "user_info.txt")
+        val jsonStr = if (file.exists()) {
+            file.bufferedReader().use { it.readText() }
+        } else {
+            assets.open("user_info.txt").bufferedReader().use { it.readText() }
+        }
+
+        val type = object : TypeToken<List<UserInfo>>() {}.type
+        return Gson().fromJson(jsonStr, type)
     }
 }

@@ -89,6 +89,7 @@
         android:id="@+id/date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:text="1145/01/04"
         android:textSize="24sp"
@@ -106,7 +107,7 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/tvp"
         app:layout_constraintEnd_toEndOf="@+id/date"
-        app:layout_constraintStart_toEndOf="@+id/tvp"
+        app:layout_constraintStart_toStartOf="@+id/date"
         app:layout_constraintTop_toTopOf="@+id/tvp" />
 
     <EditText

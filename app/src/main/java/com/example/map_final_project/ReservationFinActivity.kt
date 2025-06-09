@@ -50,6 +50,13 @@ class ReservationFinActivity : AppCompatActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
         }
+
+
+        findViewById<Button>(R.id.btn_back).setOnClickListener {
+            finish()
+        }
+
+
     }
 
     private fun cancelReservation(userId: String, reservationId: Int) {

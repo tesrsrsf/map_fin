@@ -13,6 +13,18 @@
         android:theme="@style/Theme.Map_final_project"
         tools:targetApi="31">
         <activity
+            android:name=".AdminMenuEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignUpActivity"
+            android:exported="false" />
+        <activity
             android:name=".ReservationFinActivity"
             android:exported="false" />
         <activity
